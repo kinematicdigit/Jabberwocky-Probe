@@ -21,3 +21,6 @@ A basic macro set has been included (I welcome anyone to elaborate or refine the
 | Omron D2HW-C201H v2                              | 1        |
 | Omron D2F-L                                      | 1        |
 | Wiring & Connector                               | various  |
+
+
+Coffee fund donations are always welcome to help support my ongoing efforts. [Click here](https://www.paypal.com/donate/?business=CXCABTX8BCAUY&no_recurring=0&item_name=Thank+you+for+your+support%21&currency_code=CAD) to donate. Thank-you!
