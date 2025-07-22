@@ -12,7 +12,7 @@ Wiring involves connecting the two switches in series with NC and a connector in
 
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/wiring.png" />
 
-A basic macro set has been included, which is still very highly experimental and could damage your plate (I welcome anyone to elaborate or refine the macro). Adjust the variables to suit your printer parameters. Thanks to @mdrifterx3 for assistance in creating the macros. 
+**A basic macro set has been included, which is still very highly experimental and could damage your plate** (I welcome anyone to elaborate or refine the macro). Adjust the variables to suit your printer parameters. Thanks to @mdrifterx3 for assistance in creating the macros. 
 
 # BOM
 | Hardware / Component                             | Quantity |
