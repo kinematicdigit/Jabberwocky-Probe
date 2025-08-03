@@ -12,7 +12,7 @@ Wiring involves connecting the two switches in series with NC on connections and
 
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/wiring.png" />
 
-**A basic macro set has been included, which is still very highly experimental and could damage your plate** (I welcome anyone to elaborate or refine the macro). Adjust the variables to suit your printer parameters. Thanks to @mdrifterx3 for assistance in creating the macros. 
+**A basic macro set has been included, which is still very highly experimental and could damage your plate** (I welcome anyone to elaborate or refine the macro). Adjust the variables to suit your printer parameters and in your printer config ```[stepper_z]``` settings you need to change your ```endstop_pin``` to ```endtop_pin: probe:z_virtual_endstop```, ```homing_retract_dist: 0``` and remove or comment out ```position_endstop:``` Thanks to @mdrifterx3 for assistance in creating the macros. 
 
 # BOM
 | Hardware / Component                             | Quantity |
