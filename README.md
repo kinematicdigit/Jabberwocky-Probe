@@ -6,9 +6,9 @@ A simple probe that relies strictly on a single endstop port to operate. No dock
 
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/backside.png" />
 
-Switchy relies on idler blocks to actuate the probe, sliding the Omron D2HW-C201H switch to swing into place. Once probing is complete, the toolhead is stowed, but the toolhead is brought to the X-Minimum location, and the probe is returned to its stored state. The probe utilized two switches wired in series to act as a mechanism to inform Klipper of the probe's state.
+Switchy relies on idler blocks to actuate the probe, sliding the Omron D2HW-C201H switch to swing into place. Once probing is complete, the probe is stowed by bringing it to the X-Minimum location. The probe utilizes two switches wired in series to act as a mechanism to inform Klipper of the probe's state.
 
-Wiring involves connecting the two switches in series with NC and a connector inline with one of the leads. I recommend using small male and female JST connectors. Polarity does not matter.
+Wiring involves connecting the two switches in series with NC on connections and a connector inline with one of the leads. I recommend using small male and female JST connectors for easier installation. Polarity does not matter.
 
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/wiring.png" />
 
