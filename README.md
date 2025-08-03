@@ -14,6 +14,9 @@ Wiring involves connecting the two switches in series with NC on connections and
 
 **A basic macro set has been included, which is still very highly experimental and could damage your plate** (I welcome anyone to elaborate or refine the macro). Adjust the variables to suit your printer parameters and in your printer config ```[stepper_z]``` settings you need to change your ```endstop_pin``` to ```endtop_pin: probe:z_virtual_endstop```, ```homing_retract_dist: 0``` and remove or comment out ```position_endstop:``` Thanks to @mdrifterx3 for assistance in creating the macros. 
 
+> [!NOTE] 
+> I am not certain if this is the case, but the probe might only work with sensorless X-endstop homing. I have not installed a switch for the X-endstop to verify this. Because the probe uses the X-min to trigger the probe, it shares that action. There are two set screws on the probe (M2x8 SHCS) to adjust the probe's trigger points. So in the case of a physical switch, it might be possible to adjust those set screw so it works with a physical switch. This needs to be confirmed in testing.
+
 # BOM
 | Hardware / Component                             | Quantity |
 | ------------------------------------------------ | -------- |
