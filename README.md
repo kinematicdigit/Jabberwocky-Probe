@@ -20,8 +20,8 @@ Wiring involves connecting the two switches in series with NC on connections and
 | M3 Nuts                                          | 2        |
 | M2x8 SHCS                                        | 2        |
 | M2x10 SHCS                                       | 7        |
-| M3x16 SHCS                                       | 2        |
-| N52 Magnets                                      | 4        |
+| M3x20 SHCS                                       | 2        |
+| N52 Magnets                                      | 6        |
 | Omron D2HW-C201H v2                              | 1        |
 | Omron D2F-L                                      | 1        |
 | Wiring & Connector                               | various  |
