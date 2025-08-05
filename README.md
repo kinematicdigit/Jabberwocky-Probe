@@ -20,7 +20,7 @@ Wiring involves connecting the two switches in series with NC on connections and
 > To-do (stuff to still flush out or goals to reach that might need help from others on):
 > 1. Better homing override (better control over G28 and other standard homing sequences)
 > 2. Adaptive Bed mesh is not working currently (can only do a full plate)
-> 3. Allow for Auto-Z calibration (currently can't get it to work because it seems conflice over the same defined Z-stop)
+> 3. Allow for Auto-Z calibration (currently can't get it to work because it seems to conflict over the same defined Z-stop)
 > 4. A magnetic switch version for higher accuracy.
 
 # BOM
