@@ -1,12 +1,12 @@
-# Switchy
-Switchy Probe
+# Jabberwocky Probe
+Jabberwocky Probe (formerly Switchy)
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/mainimage.png" />
 
 A simple probe that relies strictly on a single endstop port to operate. No dock is needed, and it is adjustable for different printer environments.
 
 <img src="https://github.com/kinematicdigit/Switchy/blob/main/images/backside.png" />
 
-Switchy relies on idler blocks to actuate the probe (X-min and X-max), sliding the Omron D2HW-C201H switch to swing into place (the x-min, which is shared by homing the X of your printer). Once probing is complete, the probe is stowed by bringing it to the X-Maximum location. The probe utilizes two switches wired in series to inform Klipper of the probe's state.
+Jabberwocky Probe relies on idler blocks to actuate the probe (X-min and X-max), sliding the Omron D2HW-C201H switch to swing into place (the x-min, which is shared by homing the X of your printer). Once probing is complete, the probe is stowed by bringing it to the X-Maximum location. The probe utilizes two switches wired in series to inform Klipper of the probe's state.
 
 Wiring involves connecting the two switches in series with NC on connections and a connector inline with one of the leads. I recommend using small male and female JST connectors for easier installation. Polarity does not matter.
 
