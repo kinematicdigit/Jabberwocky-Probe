@@ -17,7 +17,7 @@ Wiring involves connecting the two switches in series with NC on connections and
 > [!NOTE] 
 > I am not certain if this is the case, but the probe might only work with sensorless X-endstop homing. I have not installed a switch for the X-endstop to verify this. Because the probe uses the X-min to trigger the probe, it shares that action. There are two set screws on the probe (M2x8 SHCS) to adjust the probe's trigger points. So in the case of a physical switch, it might be possible to adjust those set screw so it works with a physical switch. This needs to be confirmed in testing.
 >
-> To-do (stuff to still flush out or goals to reach that might need help from others on):
+> To-do (stuff to still flush out or goals to reach that might need help from other more knowledgable people):
 > 1. Better homing override (better control over G28 and other standard homing sequences)
 > 2. ~~Adaptive Bed mesh is not working currently (can only do a full plate)~~ thanks to igiannakas for helping me figure this out.
 > 3. Allow for Auto-Z calibration (currently can't get it to work because it seems to conflict with the same defined Z-stop)
