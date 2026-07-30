@@ -1,6 +1,6 @@
 # 📖 Universal Switchy / Klicky & Auto-Z Calibration Template
 
-This universal Klipper configuration template is designed for 3D printers utilizing a **Physical Auto-Z Switch** paired with a dockable, magnetically attached toolhead probe (such as Switchy, Klicky, or QuickDraw). 
+The universal Klipper configuration template (JWProbe.cfg) is designed for 3D printers utilizing a **Physical Auto-Z Switch** paired with a dockable, magnetically attached toolhead probe (such as Switchy, Klicky, or QuickDraw). 
 
 It features dynamic low-torque homing current adjustments, a highly optimized high-speed leveling profile, and an isolated calibration routine that eliminates premature runaway travel moves to `X0`.
 
