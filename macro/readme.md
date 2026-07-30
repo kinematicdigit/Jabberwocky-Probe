@@ -9,7 +9,7 @@ It features dynamic low-torque homing current adjustments, a highly optimized hi
 ## 🚀 Features
 
 *   **Centralized Configuration:** Tune all physical coordinates, dock positions, and boundary margins in a single variable block at the top of the file without messing with complex macro logic.
-*   ** Prematurity-Free Calibration Workflow:** Automatically keeps the probe attached across nozzle, switch, and bed probing steps before executing a single safe return trip to the dock.
+*   **Prematurity-Free Calibration Workflow:** Automatically keeps the probe attached across nozzle, switch, and bed probing steps before executing a single safe return trip to the dock.
 *   **High-Speed Levelling Profile:** Lowers transit Z-hop paths to `2mm` and `3mm` to reduce printing preparation time by up to 50%.
 *   **Universal Compatibility:** Includes active `[quad_gantry_level]` setups alongside drop-in, fully commented `[z_tilt]` layouts for dual or triple Z-axis machines.
 *   **Synchronized Z-Axis Floor:** Keeps global hardware axis safety margins and calibration search depths linked to eliminate `Move out of range` errors.
