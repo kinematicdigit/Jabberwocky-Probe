@@ -1,6 +1,4 @@
-WIP do not use
-
-
+**WIP do not use**
 
 # 📖 Universal Switchy / Klicky & Auto-Z Calibration Template
 
@@ -12,115 +10,86 @@ It features dynamic low-torque homing current adjustments, a highly optimized hi
 
 ## 🚀 Features
 
-*   **Centralized Configuration:** Tune all physical coordinates, dock positions, and boundary margins in a single variable block at the top of the file without messing with complex macro logic.
-*   **Prematurity-Free Calibration Workflow:** Automatically keeps the probe attached across nozzle, switch, and bed probing steps before executing a single safe return trip to the dock.
-*   **High-Speed Levelling Profile:** Lowers transit Z-hop paths to `2mm` and `3mm` to reduce printing preparation time by up to 50%.
-*   **Universal Compatibility:** Includes active `[quad_gantry_level]` setups alongside drop-in, fully commented `[z_tilt]` layouts for dual or triple Z-axis machines.
-*   **Synchronized Z-Axis Floor:** Keeps global hardware axis safety margins and calibration search depths linked to eliminate `Move out of range` errors.
+*   **Centralized Configuration:** Tune all physical coordinates and boundary safety margins inside a single variables block at the top of your config.
+*   **High-Speed Leveling Alignment:** Lowers horizontal transit Z-hop paths to minimize vertical travel time during multi-point sweeps.
+*   **Synchronized Z-Axis Floor:** Connects global hardware axis boundaries directly with calibration searching depths to eliminate `Move out of range` errors.
+*   **Universal Compatibility:** Works seamlessly with `[quad_gantry_level]` setups or drop-in `[z_tilt]` layouts for dual or triple Z-axis machines.
 
 ---
 
-## 🛠️ Prerequisites & Hardware Setup
+## 🛠️ Step 1: Collect Your Hardware Coordinates
 
-Before installing this template, verify that your machine meets the following structural requirements:
-1.  **Klipper Z-Calibration Plugin:** The `protoloft/klipper_z_calibration` extension must be installed on your host system via KIAUH or direct terminal input.
-2.  **Physical Frame Endstop Switch:** A dedicated microswitch button must be permanently mounted to your frame (typically near the rear-right of the bed limits). Your physical nozzle tip must be able to push directly down on this pin.
-3.  **Dockable Probe:** Your toolhead probe mechanism must function correctly electrically when verified manually using the `QUERY_PROBE` console command.
+Use the manual control arrows in your web interface (Mainsail/Fluidd) to jog your printer. Record the exact coordinates for the following positions:
 
----
-
-## ⚙️ Step 1: Mapping Real-World Coordinates
-
-Before deploying the configuration file, use your web interface (Mainsail/Fluidd) to manually jog your toolhead to record your exact machine geometry coordinates:
-
-1.  **Nozzle On Switch (`variable_x_homing_pos` / `variable_y_homing_pos`):** Jog the toolhead until the **tip of the nozzle** is perfectly centered on top of your frame-mounted Z-switch pin button. Record the `X` and `Y` values.
-2.  **Probe On Switch (`switch_xy_position` under `[z_calibration]`):** Manually attach your probe. Jog the toolhead until the **center of the probe body button** is perfectly aligned over that exact same frame Z-switch pin. Record the `X` and `Y` values.
-3.  **Probe Pickup Dock (`variable_deploy_pos`):** Jog the toolhead to the exact entry `X` coordinate where it smoothly slides into the dock cradle to attach the probe.
-4.  **Probe Separation Station (`variable_retract_pos`):** Jog the toolhead to the exact `X` coordinate where it slides or strips to break the magnet bond and detach the probe (typically `X0`).
-5.  **Bed Center Midpoint (`variable_safe_x` / `variable_safe_y`):** Locate the geometric absolute center of your print surface (e.g., `90, 90` for a standard 180x180mm print bed).
+1.  **Nozzle Center on Z-Switch:** Jog the toolhead until the bare **nozzle tip** is perfectly centered on top of your frame-mounted Z-switch pin. Note the `X` and `Y` values.
+2.  **Probe Center on Z-Switch:** Jog the toolhead until the **center of the probe body button** is aligned over that exact same Z-switch pin. Note these `X` and `Y` values.
+3.  **Print Bed Center and Boundaries:** Note your total usable print area dimensions (e.g., `180` x `180` mm) and its absolute midpoint center (e.g., `90, 90`).
 
 ---
 
-## 📝 Step 2: Deployment & Variable Setup
+## 📝 Step 2: Update the Variable Blocks
 
-Create a new file named `jw_probe.cfg` inside your Klipper configuration directory, paste the template contents into it, and add `[include jw_probe.cfg]` to your primary `printer.cfg` file.
+Open your configuration file. Update **`[gcode_macro Homing_Variables]`** and **`[gcode_macro switchy_variables]`** using your recorded metrics.
 
-Navigate to **`SECTION 1. PRINTER-SPECIFIC VARIABLE STORES`** at the top of the file and insert your recorded metrics:
-
+### 1. Configure Homing & Switch Positions
+Input your Nozzle-on-Pin coordinates into `variable_x_homing_pos` and `variable_y_homing_pos`:
 ```ini
 [gcode_macro Homing_Variables]
-variable_x_homing_pos:          124  ; <--- Insert Nozzle-On-Pin X coordinate
-variable_y_homing_pos:          188  ; <--- Insert Nozzle-On-Pin Y coordinate
-variable_z_min_floor:          -3.0  ; Allowed depth margin below 0.0mm limit
+variable_lift_z:                5.0  ; Z-hop height before homing
+variable_x_homing_pos:          125  ; <--- YOUR NOZZLE-ON-PIN X HERE
+variable_y_homing_pos:          188  ; <--- YOUR NOZZLE-ON-PIN Y HERE
+variable_z_end_pos:             5.0  ; Post-homing Z retract height
+variable_z_min_floor:          -3.0  ; Maximum allowable probing depth below 0.0mm
+```
 
+### 2. Configure Safe Transit Zones & Bed Center
+Input the absolute center coordinate of your bed (e.g., `90, 90` for a 180x180 bed):
+```ini
 [gcode_macro switchy_variables]
-variable_deploy_pos:            176  ; <--- Insert Pickup Dock X coordinate
-variable_retract_pos:             0  ; <--- Insert Drop-off Station X coordinate
-variable_safe_x:                 90  ; <--- Insert Bed Center X coordinate
-variable_safe_y:                 90  ; <--- Insert Bed Center Y coordinate
+variable_safe_x:                 90  ; <--- YOUR BED CENTER X HERE
+variable_safe_y:                 90  ; <--- YOUR BED CENTER Y HERE
 ```
 
----
-
-## 🛡️ Step 3: Configuring Boundary Safety Margins
-
-To prevent your probe from running into frame components or hitting bed leveling clips, adjust your mesh and alignment boundaries within the geometric variable constants section:
-
-*   **For a 10mm Boundary Margin:** Subtract 10 from your max size, add 10 to your min size.
-*   **For a 20mm Boundary Margin:** Subtract 20 from your max size, add 20 to your min size.
-*   *Note:* Ensure you add your probe's physical `y_offset` (e.g., `26.0`) to your **Y boundaries** to keep your toolhead from driving too far back.
+### 3. Calculate Safety Boundary Margins
+To keep the toolhead from striking bed clips or falling off edges, calculate a safety margin envelope (e.g., 20mm inward from the physical edges). 
+*   *Crucial rule:* You must factor your probe's physical `y_offset` (e.g., `26.0`) into the **Y variables** so the gantry does not travel too far back during automatic probing routines.
 
 ```ini
-# Example configuration for a 180x180 bed with a 20mm margin and a 26mm rear probe offset:
-variable_mesh_min_x:             20  ; Edge safety buffer
-variable_mesh_min_y:             46  ; 20mm margin + 26mm probe offset
-variable_mesh_max_x:            160  ; Edge safety buffer
-variable_mesh_max_y:            144  ; 160 max Y travel minus probe offset factor
+# Example for a 180x180 bed with a 20mm margin and a 26mm rear probe offset:
+variable_mesh_min_x:             20  ; 20mm left edge margin
+variable_mesh_min_y:             46  ; 20mm front margin + 26mm probe offset
+variable_mesh_max_x:            160  ; 180mm max minus 20mm right margin
+variable_mesh_max_y:            144  ; 180mm max Y minus 20mm back margin minus 16mm clearance
+
+# Mirror these exact boundary limits down into your QGL coordinate variables:
+variable_qgl_point1_x:           20  ; Front-Left X
+variable_qgl_point1_y:           20  ; Front-Left Y
+variable_qgl_point2_x:           20  ; Rear-Left X
+variable_qgl_point2_y:          134  ; Rear-Left Y (Matches max mesh Y constraint)
+variable_qgl_point3_x:          160  ; Rear-Right X
+variable_qgl_point3_y:          134  ; Rear-Right Y (Matches max mesh Y constraint)
+variable_qgl_point4_x:          160  ; Front-Right X
+variable_qgl_point4_y:           20  ; Front-Right Y
 ```
 
 ---
 
-## 🧪 Step 4: First-Run Safety Verification Testing
+## 🔬 Step 3: Align Hardware Sections
 
-> ⚠️ **WARNING:** Do not leave the printer unattended during this test phase. Keep your hand placed directly over your web interface **Emergency Stop** button or your machine's physical power switch.
+Verify that your physical stepper, probe, mesh, and QGL blocks reference your variables instead of raw hardcoded values.
 
-1.  Send a **`RESTART`** instruction to reload your configuration.
-2.  Run **`G28`** to verify core homing. The toolhead must home X and Y, move directly to your Z-switch pin (`X124, Y188`), tap the button with the nozzle, and lift back up `5mm`.
-3.  Execute **`DEPLOY_PROBE`**. The toolhead must travel smoothly to your dock, attach the probe cleanly, and return back to the center of the bed (`X90, Y90`) at a safe `Z5` height.
-4.  Execute **`RETRACT_PROBE`**. The toolhead must slide to your stripping station (`X0`), break the magnetic connection cleanly, and return to the center of the bed completely empty.
-
----
-
-## 🎯 Step 5: Running the Auto-Z Calibration
-
-Once the individual travel sequences function as expected, execute the automated verification macro command:
-
-```gcode
-CALIBRATE_Z
-```
-
-### Automation Sequence Path Breakdown:
-1.  The machine fires `DEPLOY_PROBE` to pick up and attach the hardware sensor.
-2.  The bare **nozzle tip** references the physical frame-mounted switch pin.
-3.  The toolhead re-aligns to tap the switch pin button using the center of the attached **probe switch body**.
-4.  The toolhead travels smoothly to **X10** (or your centered mesh position) to sample the bed surface plane.
-5.  After the math calculation resolves, `RETRACT_PROBE` is triggered, safely sliding the probe off at your `X0` station.
-6.  The dynamic offset value is locked into Klipper memory and printed to the terminal dashboard console.
+*   **`[stepper_z] position_min`:** Must match your `variable_z_min_floor` (set to `-3.0`) to avoid software limits blocking a successful switch click.
+*   **`[probe] y_offset`:** Must match the physical distance from your nozzle tip to the center of your probe body (set to `26.0`).
+*   **`[bed_mesh]` & `[quad_gantry_level]`:** Ensure the layout coordinates for `mesh_min`, `mesh_max`, and `points` match the safety boundary targets established in your variables block.
 
 ---
 
-## 🔄 Step 6: Print Start Integration
+## 🧪 Step 4: First-Run Safety Verification
 
-To fully automate this calibration sequence before every print job, replace the standard homing steps inside your `[gcode_macro PRINT_START]` block with this operational logic chain:
+> ⚠️ **WARNING:** Keep your hand directly over the software **Emergency Stop** button or the printer's physical power switch during this initial verification pass.
 
-```ini
-[gcode_macro PRINT_START]
-gcode:
-    M104 S150                    ; Preheat nozzle to a safe non-oozing temperature
-    M140 S[bed_temperature]      ; Heat the print surface completely
-    G28                          ; Safe low-torque home for all axes
-    QUAD_GANTRY_LEVEL            ; Balance gantry frame (or use Z_TILT_ADJUST)
-    G28 Z                        ; Re-home Z axis following geometric frame leveling
-    CALIBRATE_Z                  ; Run dynamic Auto-Z calibration workflow template
-    BED_MESH_CALIBRATE           ; Generate or load surface compensation profile map
-```
+1.  Issue a **`RESTART`** command in your console terminal dashboard.
+2.  Run **`G28`** to test homing overrides. The toolhead must home X and Y, transition directly to your Z-switch pin (`X125, Y188`), tap the button with the nozzle, and retract up 5mm.
+3.  Test your leveling macros (`QUAD_GANTRY_LEVEL` or `Z_TILT_ADJUST`) to ensure movements stay well within the inner boundary limits without wandering off the bed surface.
+4.  Run **`CALIBRATE_Z`** to check accuracy before launching an actual print job.
+
