@@ -1,16 +1,16 @@
 # 📖 Universal Switchy / Klicky & Auto-Z Calibration Template
 
-The universal Klipper configuration template (JWProbe.cfg) is designed for 3D printers utilizing a **Physical Auto-Z Switch** paired with a dockable, magnetically attached toolhead probe (such as Switchy, Klicky, or QuickDraw). 
+The universal Klipper configuration template (JWProbe.cfg) is designed for 3D printers utilizing a **Physical Auto-Z Switch** paired with Jabberwocky Probe.
 
-It features dynamic low-torque homing current adjustments, a highly optimized high-speed leveling profile, and an isolated calibration routine that eliminates premature runaway travel moves to `X0`.
+It features dynamic low-torque homing current adjustments, a highly optimized high-speed levelling profile, and an isolated calibration routine that eliminates premature runaway travel moves to `X0`.
 
 ---
 
 ## 🚀 Features
 
 *   **Centralized Configuration:** Tune all physical coordinates, dock positions, and boundary margins in a single variable block at the top of the file without messing with complex macro logic.
-*   ** prematurity-Free Calibration Workflow:** Automatically keeps the probe attached across nozzle, switch, and bed probing steps before executing a single safe return trip to the dock.
-*   **High-Speed Leveling Profile:** Lowers transit Z-hop paths to `2mm` and `3mm` to reduce printing preparation time by up to 50%.
+*   ** Prematurity-Free Calibration Workflow:** Automatically keeps the probe attached across nozzle, switch, and bed probing steps before executing a single safe return trip to the dock.
+*   **High-Speed Levelling Profile:** Lowers transit Z-hop paths to `2mm` and `3mm` to reduce printing preparation time by up to 50%.
 *   **Universal Compatibility:** Includes active `[quad_gantry_level]` setups alongside drop-in, fully commented `[z_tilt]` layouts for dual or triple Z-axis machines.
 *   **Synchronized Z-Axis Floor:** Keeps global hardware axis safety margins and calibration search depths linked to eliminate `Move out of range` errors.
 
