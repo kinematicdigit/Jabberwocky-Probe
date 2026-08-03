@@ -101,6 +101,22 @@ Users can toggle between dynamic Auto-Z tracking or traditional static offsets c
 # Set to False to bypass the plugin and apply a standard static offset ceiling fallback
 variable_use_auto_z: False  
 ```
+### 📊 Verbose Logging & Debug Traffic Controls
+
+To prevent terminal clutter during stable production runs or to activate deep tracing parameters during initial troubleshooting, you can adjust the diagnostic reporting depth via `variable_verbose_level` inside `JWPROBE/jwprobe_variables.cfg`:
+
+```ini
+[gcode_macro JWProbe_Variables]
+# 0 = Silent Mode: Turns off all regular background informational console echoes.
+# 1 = Standard Production Mode (Default): Logs critical pipeline steps and calculations.
+# 2 = Deep Debug Mode: Outputs granular trace telemetry blocks for all macro functions.
+variable_verbose_level: 1
+```
+
+> 💡 **Live Runtime Adjustments**: If you want to change the logging depth on the fly during an active printing session without restarting your entire firmware configuration, you can send this raw override string directly to your interface console deck:
+> ```gcode
+> SET_GCODE_VARIABLE MACRO=JWProbe_Variables VARIABLE=verbose_level VALUE=2
+> ```
 
 ### ⚠️ Hardware Pin Choice Reminder
 If you toggle `variable_use_auto_z: False`, Klipper requires you to open `JWPROBE/jwprobe_hardware.cfg` and comment out the physical pin line to tell the system stepper drivers to route through virtual endstop flags instead:
