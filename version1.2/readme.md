@@ -21,8 +21,6 @@ This suite relies on two open-source extensions to function. They must be instal
 ### 1. Protoloft's Auto-Z Calibration Plugin (klipper_z_calibration)
 * **Purpose**: Manages nozzle-contact and switch-body micro-taps for dynamic runtime Z-offset calculations.
 * **Installation Terminal Commands**:
-
-
 ```bash
 cd ~
 git clone https://github.com
@@ -46,10 +44,11 @@ To maintain a clean configuration directory, all supporting logic is separated i
 
 * **printer.cfg** (Your main configuration file)
   * **[include JWProbe.cfg]** (Master Wrapper Control Hub)
-    * **[include JWPROBE/jwprobe_variables.cfg]** (Configuration parameters & stroke limits)
-    * **[include JWPROBE/jwprobe_hardware.cfg]** (Pin definitions, mesh boundaries, QGL constants)
-    * **[include JWPROBE/jwprobe_core_movements.cfg]** (Sensorless homing overrides & leveling loops)
-    * **[include JWPROBE/jwprobe_actuation_safety.cfg]** (Low-level X-strike mechanics & verification gates)
+    * **[include JWPROBE/jwprobe_variables.cfg]** (Configuration parameters, logging, & stroke limits)
+    * **[include JWPROBE/jwprobe_hardware.cfg]** (Pin definitions, mesh boundaries, clearance constants)
+    * **[include JWPROBE/jwprobe_homing.cfg]** (Isolated sensorless overrides & bare-nozzle Z-strikes)
+    * **[include JWPROBE/jwprobe_actuation_safety.cfg]** (Split-velocity X-wall strikes & Y safety lanes)
+    * **[include JWPROBE/jwprobe_leveling_mesh.cfg]** (Consolidated Bed Mesh, micro-fine QGL, & Z-Tilt engine)
     * **[include JWPROBE/jwprobe_led_effects.cfg]** (Compact animation arrays and power decay ticks)
     * **[include JWPROBE/jwprobe_test_macros.cfg]** (G-code calibration patterns & live tuning panels)
     * **[include JWPROBE/jwprobe_install_wizard.cfg]** (Automatic calibration configuration script)
@@ -58,7 +57,7 @@ To maintain a clean configuration directory, all supporting logic is separated i
 
 ## 🔬 Mandatory Verification Protocol
 
-Before powering on your stepper motors or executing any movement macros, you **MUST** open and follow the step-by-step diagnostic verification guide:
+Before powering on your stepper motors or executing any movement macros, you **MUST** open and follow the step-by-step diagnostic verification guide to protect your gantry and build plate:
 
 👉 [**CLICK HERE TO OPEN TESTING_PROTOCOL.md**](./TESTING_PROTOCOL.md)
 
@@ -101,6 +100,26 @@ Users can toggle between dynamic Auto-Z tracking or traditional static offsets c
 # Set to False to bypass the plugin and apply a standard static offset ceiling fallback
 variable_use_auto_z: False  
 ```
+
+### ⚠️ Hardware Pin Choice Reminder
+If you toggle `variable_use_auto_z: False`, Klipper requires you to open `JWPROBE/jwprobe_hardware.cfg` and comment out the physical pin line to tell the system stepper drivers to route through virtual endstop flags instead:
+
+```ini
+[stepper_z]
+# OPTION A: If using Protoloft Auto-Z Calibration, uncomment these lines:
+endstop_pin: PC3                     
+position_endstop: 5.943             
+
+# OPTION B: If using standard manual Z-offset calibration, uncomment these lines:
+# endstop_pin: probe:z_virtual_endstop
+# homing_retract_dist: 0
+```
+
+### 🔀 Automated Bed Style Selector (QGL vs Z-Tilt)
+The leveling engine inside `jwprobe_leveling_mesh.cfg` automatically detects your printer's build type. It checks your primary system configuration blocks and dynamically maps the layout:
+* If Klipper detects `[quad_gantry_level]`, it unlocks hyper-tight micro-fine **QGL passes** converging down to a strict `0.0050mm` tolerance gate.
+* If Klipper detects `[z_tilt]`, it automatically routes your pipeline into high-precision multi-stepper **Z-Tilt alignments** enforcing the exact same tight sub-micron filters.
+
 ### 📊 Verbose Logging & Debug Traffic Controls
 
 To prevent terminal clutter during stable production runs or to activate deep tracing parameters during initial troubleshooting, you can adjust the diagnostic reporting depth via `variable_verbose_level` inside `JWPROBE/jwprobe_variables.cfg`:
@@ -144,7 +163,7 @@ M140 S[first_layer_bed_temperature] ; Start heating bed
 M104 S150                            ; Set standby toolhead temp to mitigate ooze
 M190 S[first_layer_bed_temperature] ; Wait for bed temp to stabilize
 
-COMPUTE_OFFSET_DIFFERENCE            ; Executes homing, dynamic probe calibration, QGL, and adaptive mesh
+COMPUTE_OFFSET_DIFFERENCE            ; Executes homing, dynamic probe calibration, leveling, and adaptive mesh meshes
 
 M109 S[first_layer_temperature]     ; Ramp hotend core up to true printing temperature
 M118 Jabberwocky Pipeline Clear. Launching print initialization tracking.
@@ -159,4 +178,5 @@ The repository includes explicit, built-in macro control panels inside `jwprobe_
 * `CALIBRATE_FIRST_LAYER_PLA` / `CALIBRATE_FIRST_LAYER_ABS`: Generates a specialized, native 40x40 tracking patch to let you observe layer adhesion live without needing to slice diagnostic STLs.
 * `SQUISH_MORE_CLOSE` / `SQUISH_LESS_AWAY`: Volatile runtime adjustment buttons to bump your operational offset by `0.02mm` steps mid-print.
 * `EMERGENCY_CLEAR_LED_ALARM`: Instantly terminates diagnostic alarm patterns, clears system error flashes, and restores your lighting blocks back to generic ready flags.
+
 
