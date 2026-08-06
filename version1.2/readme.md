@@ -1,16 +1,88 @@
-# 🦎 Jabberwocky Probe (JWPROBE) v1.2 — Master Configuration Suite
+# 🦎 Jabberwocky Probe (JWPROBE) v1.2 — Master Documentation Manual
 
-The **Jabberwocky Probe** is an ultra-lightweight mechanical toolhead-deployable probe designed natively for any 3D printer running the **LDO Jabberwocky Toolhead**. Utilizing a 2-wire, Normally Closed (NC) continuous-series loop, this suite delivers surface-independent calibration accuracy down to sub-micron windows.
-
----
+The **Jabberwocky Probe (JWPROBE)** is an ultra-lightweight mechanical, toolhead-deployable probe designed for the LDO Jabberwocky Toolhead, offering high-precision, surface-independent calibration using a 2-wire, Normally Closed (NC) loop.
 
 ## ⚡ The Jabberwocky Advantage
 
-*   **Zero Docks or Servos**: Actuated entirely by physical X-axis frame wall strikes.
-*   **Surface Independent**: Pure mechanical switch contact ensures flawless tracing across PEI, glass, or garolite.
-*   **Continuous-Series Loop**: Bridges carriage engagement and nozzle touchdown into a single robust safety input channel (`nhk:gpio10`).
+*   **Zero Docks or Servos**: Actuated by physical X-axis frame strikes, reducing toolhead mass.
+*   **Surface Independent**: Operates flawlessly on PEI, glass, or garolite.
+*   **Continuous-Series Loop Failsafe**: Uses a NC loop (`nhk:gpio10`) for immediate stoppage upon wire break or connection failure.
+*   **Thermal Immunity**: Impervious to high chamber/bed temperatures.
 
 ---
+
+## ⚖️ Comparative Analysis (Advantages Over Competitive Probes)
+
+| Feature | JWPROBE v1.2 | BLTouch/Antclabs | Klicky/Euclid | Voron Tap | Inductive |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Toolhead Mass** | **Extremely Low** | Medium | Low | **Very High** | Low |
+| **Thermal Res.** | **High** | Low | Medium | High | **Extremely Low** |
+| **Fail-Safe** | **NC Loop** | None | Variable | High | Variable |
+| **Build Efficiency**| **Maximum** | High | Reduced | Maximum | Reduced |
+| **Wear Components** | **Minimal** | High | Medium | High | **Zero** |
+
+---
+
+### 🌍 Build Surface Compatibility Matrix
+
+*   **Glass/Borosilicate**: **Flawless** (Physical trigger vs. Inductive failure).
+*   **Garolite/G10**: **Flawless** (Direct surface probing vs. Inconsistent sensing).
+*   **Textured PEI/Steel**: **Flawless** (True physical map vs. Texture variance noise).
+
+---
+
+## 🛠 Bill of Materials (BOM)
+
+To assemble the Jabberwocky Probe v1.2, you will need the following hardware components:
+
+### 🔩 Fasteners & Hardware
+*   **M2x8 SHCS**: 2 pieces (Used as adjustable set screws to fine-tune physical trigger points).
+*   **M2x10 SHCS**: 7 pieces (Primary structural assembly fasteners).
+*   **M3x20 SHCS**: 2 pieces (Main mounting fasteners).
+*   **M3 Nuts**: 2 pieces.
+*   **N52 Magnets**: 6 pieces (Ensures crisp deployment snapping and secure stowing retention).
+
+### 🔌 Electronics & Switches
+*   **Omron D2HW-C201H v2**: 1 piece (The strike switch mounted to the sliding carriage).
+*   **Omron D2F-L**: 1 piece (The touchdown microswitch for direct nozzle tracing).
+*   **Wiring/Connectors**: Various lengths of premium wire. Small male and female JST inline connectors are strongly recommended to establish a modular, quick-disconnect breakpoint for painless toolhead servicing.
+
+---
+
+## 🔌 Electrical Blueprint & Wiring Topology
+
+The mechanical architecture of the JWPROBE relies completely on your printer's X-axis idler blocks to physically actuate the carriage. 
+*   **Deployment**: The slider hits the X-Minimum boundary wall to swing the Omron D2HW-C201H switch into its active probing stance.
+*   **Stowing**: Bringing the toolhead to the X-Maximum boundary wall strikes the opposing frame face, sliding the mechanism back into its stowed position.
+
+### ⚡ The Continuous-Series Loop Logic
+To inform Klipper of its operational status without requiring complex multi-channel logic, the Jabberwocky Probe routes both microswitches into a single **continuous-series loop** utilizing **Normally Closed (NC)** configuration paths.
+
+![Jabberwocky Probe Electrical Schematic](https://github.com/kinematicdigit/Jabberwocky-Probe/raw/main/version1.2/images/electrical_schematic.png)
+
+```text
+  [ Toolhead MCU / Mainboard Pin: nhk:gpio10 ]
+                       │
+                       ▼
+         ┌───────────────────────────┐
+         │    Omron D2HW-C201H       │  (Carriage Engagement Switch)
+         │   [Terminal: NC Loop]     │
+         └─────────────┬─────────────┘
+                       │
+                       ▼  <-- Inline JST Quick-Disconnect Breakpoint
+                       │
+         ┌─────────────┴─────────────┐
+         │       Omron D2F-L         │  (Nozzle Touchdown Switch)
+         │   [Terminal: NC Loop]     │
+         └─────────────┬─────────────┘
+                       │
+                       ▼
+             [ Ground / Return Pin ]
+```
+
+### 🔒 Hardware Failsafe Operation
+Because the circuit relies on a closed electrical path while idle or searching, polarity does not matter. This layout acts as an un-bypassable hardware fail-safe: if a wire breaks mid-print, a JST plug unseats, or a terminal connection fails, the loop instantly opens. Klipper will register an immediate probe trigger event, preventing the toolhead from executing a catastrophic bed crash.
+
 
 ## 📦 Third-Party Extensions (SSH Install Required)
 
